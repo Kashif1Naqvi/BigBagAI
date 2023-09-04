@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import datetime
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,9 +27,9 @@ SECRET_KEY = 'django-insecure-k7(-w$xl*mzysrw$hy46+rap1ju*0-qihvv1=$odbdvc5n*93g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
+AUTH_USER_MODEL = 'UserModule.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'UserModule',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +56,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'BigBagAi.urls'
 
+
+# Frontend css, js e.t.c. settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,19 +74,52 @@ TEMPLATES = [
     },
 ]
 
+
+
+# djnago rest framework (Api with pagination i.e long list of data settings)
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'SecurityModule.views.IPThrottle',
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '5/minute',
+    # },
+}
+
+# Login Tokens
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=14),
+}
 WSGI_APPLICATION = 'BigBagAi.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# Database settings
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "defaultdb",
+        'USER': "doadmin",
+        'PASSWORD': "AVNS_F-PX3RT7Dzn-wK1CV9B",
+        'HOST': 'bigbagaidb-do-user-14592113-0.b.db.ondigitalocean.com',
+        'PORT': 25060,
+        
+        'OPTIONS': {
+            'options': '-c search_path=your_schema,public',
+            
+        },
+
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -112,11 +152,17 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),
+                    ]
+PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
