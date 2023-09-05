@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
 
 from django.db import models
 from rest_framework_simplejwt.tokens import RefreshToken
-from timezone_field import TimeZoneField
+
 
 
 # User manager contains the function to create a user and also
