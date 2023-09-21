@@ -26,10 +26,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         max_length=68, min_length=1)
     second_name = serializers.CharField(
         max_length=68, min_length=1)
-
+    email = serializers.CharField(
+        max_length=68, min_length=1)
     class Meta:
         model = User
-        fields = ['email', 'password' ]
+        fields = ['email', 'password', 'second_name', 'first_name' ]
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -50,7 +51,7 @@ class LoginSerializer(serializers.ModelSerializer):
         max_length=68, min_length=6, write_only=True)
 
     tokens = serializers.SerializerMethodField()
-    user_type = serializers.CharField(source='user_profile_type', read_only=True)
+    
 
     def get_tokens(self, obj):
         user = User.objects.get(email=obj['email'])
@@ -63,7 +64,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'tokens', 'user_type']
+        fields = ['email', 'password', 'tokens']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -79,9 +80,7 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('Invalid credentials, try again')
         if not user.is_active:
             raise ValidationError('Account disabled, contact admin')
-        if not user.is_verified:
-            raise ValidationError('Email is not verified')
-
+        
         return {
             'email': user.email,
             'tokens': user.tokens

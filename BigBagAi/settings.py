@@ -104,20 +104,26 @@ WSGI_APPLICATION = 'BigBagAi.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # Database settings
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': "defaultdb",
+#         'USER': "doadmin",
+#         'PASSWORD': "AVNS_F-PX3RT7Dzn-wK1CV9B",
+#         'HOST': 'bigbagaidb-do-user-14592113-0.b.db.ondigitalocean.com',
+#         'PORT': 25060,
+        
+#         'OPTIONS': {
+#             'options': '-c search_path=your_schema,public',
+            
+#         },
+
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "defaultdb",
-        'USER': "doadmin",
-        'PASSWORD': "AVNS_F-PX3RT7Dzn-wK1CV9B",
-        'HOST': 'bigbagaidb-do-user-14592113-0.b.db.ondigitalocean.com',
-        'PORT': 25060,
-        
-        'OPTIONS': {
-            'options': '-c search_path=your_schema,public',
-            
-        },
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

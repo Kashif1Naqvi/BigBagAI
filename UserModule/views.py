@@ -16,12 +16,14 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from sendgrid import Content
 
-from .serializers import AppleSocialAuthSerializer, FacebookSocialAuthSerializer, RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
-    EmailVerificationSerializer, LoginSerializer, LogoutSerializer, UserProfileSerializer, PasswordChangeSerializer, \
-    DeleteUserSerializer, ProfileSerializer
+# from .serializers import AppleSocialAuthSerializer, FacebookSocialAuthSerializer, RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
+#     EmailVerificationSerializer, LoginSerializer, LogoutSerializer, UserProfileSerializer, PasswordChangeSerializer, \
+#     DeleteUserSerializer, ProfileSerializer
+
+from .serializers import  RegisterSerializer , LoginSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from .models import User, Profile
+from .models import User #, Profile
 
 import jwt
 from django.conf import settings
@@ -44,7 +46,7 @@ import logging
 
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import GoogleSocialAuthSerializer
+# from .serializers import GoogleSocialAuthSerializer
 
 
 
@@ -97,29 +99,29 @@ class LoginAPIView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class LogoutAPIView(generics.GenericAPIView):
-    serializer_class = LogoutSerializer
 
-    permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request):
+# class LogoutAPIView(generics.GenericAPIView):
+#     serializer_class = LogoutSerializer
+
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def post(self, request):
         
-        try:
-            token_data = request.data['token_data']
-            st = Device.objects.get(token=token_data)
-            st.delete()
-            print("device deleted")
-        except:
-            print("device not found")
-        finally:
-            serializer = self.serializer_class(data=request.data)
+#         try:
+#             token_data = request.data['token_data']
+#             st = Device.objects.get(token=token_data)
+#             st.delete()
+#             print("device deleted")
+#         except:
+#             print("device not found")
+#         finally:
+#             serializer = self.serializer_class(data=request.data)
 
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+#             serializer.is_valid(raise_exception=True)
+#             serializer.save()
             
-            return Response(status=status.HTTP_204_NO_CONTENT)
+#             return Response(status=status.HTTP_204_NO_CONTENT)

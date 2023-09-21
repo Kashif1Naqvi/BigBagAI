@@ -11,12 +11,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 # a superuser that creates an admin which can log in to the admin site
 class UserManager(BaseUserManager):
     # create normal user
-    def create_user(self, email,  password=None):
+    def create_user(self, email, first_name, second_name, password=None):
 
         if email is None:
             raise TypeError('Users should have a Email')
 
         user = self.model(email=self.normalize_email(email))
+        user.first_name = first_name
+        user.second_name = second_name
         user.set_password(password)
         
         user.save()
@@ -66,7 +68,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         BOTH = 'BOTH'
 
     email = models.EmailField(max_length=255,blank=True, unique=True, db_index=True)
-    
+    first_name = models.CharField(max_length=255 ,blank=True, null=True)
+    second_name = models.CharField(max_length=255 ,blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     # is banned is for future if it wants to ban a customer or installer
